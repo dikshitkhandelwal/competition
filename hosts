@@ -1,0 +1,24 @@
+[ubuntu_hosts]
+Hermit_Shack ansible_host=10.10.1.1
+Saloon ansible_host=10.10.1.2
+
+[rocky_hosts]
+Post_Office ansible_host=10.10.1.3
+
+[raspi_hosts]
+Telegraph_Office ansible_host=10.10.1.4
+
+[windows_hosts]
+General_Store ansible_host=10.10.1.5
+Courthouse ansible_host=10.10.1.6
+Bank ansible_host=10.10.1.7
+Town_Hall ansible_host=10.10.1.8
+
+[kali_hosts]
+Army_Camp ansible_host=10.10.1.9
+
+[cloud_hosts]
+Trading_Post ansible_host=192.168.10.1
+Advertisement ansible_host=192.168.10.2
+Radio_Shack ansible_host=192.168.10.3
+Package_Office ansible_host=192.168.10.4
