@@ -15,8 +15,8 @@ apt-get upgrade -y
 apt-get install -y curl apt-transport-https wget lsb-release gnupg2
 
 # Add the Wazuh repository
-apt-key adv --fetch-keys https://packages.wazuh.com/key/GPG-KEY-WAZUH
-echo "deb https://packages.wazuh.com/4.x/apt/ stable main" | tee /etc/apt/sources.list.d/wazuh.list
+curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | gpg --dearmor -o /usr/share/keyrings/wazuh-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/wazuh-keyring.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | tee /etc/apt/sources.list.d/wazuh.list
 
 # Add the Elastic repository
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
@@ -49,6 +49,12 @@ apt-get install -y filebeat
 
 # Download the Wazuh module for Filebeat
 curl -s https://packages.wazuh.com/4.x/filebeat/wazuh-filebeat-0.1.tar.gz | tar -xvz -C /usr/share/filebeat/module
+
+# Check if the Wazuh module is in place
+if [ ! -d "/usr/share/filebeat/module/wazuh" ]; then
+    echo "The Wazuh module for Filebeat was not found."
+    exit 1
+fi
 
 # Configure Filebeat
 cat > /etc/filebeat/filebeat.yml << EOF
@@ -91,11 +97,12 @@ systemctl daemon-reload
 systemctl enable filebeat.service
 systemctl start filebeat.service
 
-# Install Wazuh Kibana plugin
-/usr/share/kibana/bin/kibana-plugin install https://packages.wazuh.com/4.x/ui/kibana/wazuh_kibana-4.2.5_7.10.2-1.zip
+# Install Wazuh Kibana plugin (replace with the correct version for your Kibana)
+KIBANA_VERSION=$(kibana --version | cut -d "." -f 1,2)
+/usr/share/kibana/bin/kibana-plugin install https://packages.wazuh.com/4.x/ui/kibana/wazuh_kibana-$KIBANA_VERSION.zip
 
 # Restart Kibana
 systemctl restart kibana
 
 echo "Wazuh installation has completed."
-echo "Access the Wazuh web interface through Kibana using the URL: http://<your_server_ip>:5601."
+echo "Access the Wazuh web interface through Kibana using
